@@ -16,6 +16,7 @@ describe org.jruby.rack.RackFilter do
   def stub_request(path_info)
     @request = javax.servlet.http.HttpServletRequest.impl {}
     @request.stub!(:setAttribute)
+    @request.stub!(:getMethod).and_return 'GET'
     if block_given?
       yield @request, path_info
     else

@@ -103,7 +103,9 @@ public class UnmappedRackFilter extends AbstractFilter {
             final FilterChain chain, 
             final RackEnvironment env) throws IOException, ServletException {
         try {
-            doFilterInternal(requestCapture, responseCapture, chain, env);
+           if (requestCapture.isStandardMethod()) {
+               doFilterInternal(requestCapture, responseCapture, chain, env);
+           }
         } // some AppServers (WAS 8.0) seem to be chained up too smart @see #79
         catch (FileNotFoundException e) {
             responseCapture.setStatus(404);
@@ -129,7 +131,7 @@ public class UnmappedRackFilter extends AbstractFilter {
      */
     protected boolean handleChainResponse(RequestCapture request, ResponseCapture response) 
         throws IOException {
-        if ( ! response.isHandled() ) {
+        if ( ! response.isHandled() || ! request.isStandardMethod() ) {
             request.reset(); // rewinds input stream
             // users might configure what to do on a 404 - by default we reset :
             if ( isResetUnhandledResponse() ) {

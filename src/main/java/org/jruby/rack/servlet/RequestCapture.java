@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +41,11 @@ public class RequestCapture extends HttpServletRequestWrapper {
         super(request);
     }
     
+    private final String[] STANDARD_METHODS = new String[] { "HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS", "TRACE" };
+    public boolean isStandardMethod() {
+        return Arrays.binarySearch( STANDARD_METHODS, getMethod() ) > -1;
+    }
+
     /**
      * @deprecated use {@link #RequestCapture(HttpServletRequest)}
      * @param request
